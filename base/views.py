@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views import View
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404,render,redirect
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.views import LoginView
@@ -8,6 +8,8 @@ from .forms import CustomUserCreationForm,ProductUploadForm
 from django.contrib.auth import login
 from .models import Product,Category
 from django.http import HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import *
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'  # Your custom login template
@@ -68,6 +70,25 @@ class ProductUploadView(CreateView):
         context = super().get_context_data(**kwargs)
         return context
 
+class AddToCartView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        # Ensure that the user is authenticated
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden("You must be logged in to add items to your cart.")
 
+        # Get the product by ID
+        product_id = kwargs.get('product_id')
+        product = get_object_or_404(Product, id=product_id)
+
+        # Check if the product is already in the user's cart
+        cart_item, created = Cart.objects.get_or_create(product=product, user=request.user)
+
+        if not created:
+            # If the product is already in the cart, increase the quantity
+            cart_item.quantity += 1
+        cart_item.save()
+
+        # Redirect to the home page or any other page (you can customize this)
+        return redirect('home')
 # Create your views here.
 
