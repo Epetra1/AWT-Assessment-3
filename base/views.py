@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views import View
 from django.shortcuts import get_object_or_404,render,redirect
-from django.views.generic import ListView
+from django.views.generic import ListView,TemplateView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.views import LoginView
 from .forms import CustomUserCreationForm,ProductUploadForm
@@ -50,7 +50,29 @@ class HomeView(ListView):
             return Product.objects.filter(category_id=category_id)
         # If no category is selected, return all products
         return Product.objects.all()
-
+class ProductsView(ListView):
+    model = Product
+    template_name = 'products.html'  # Your template for the products page
+    context_object_name = 'products'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add all categories to the context
+        context['categories'] = Category.objects.all()
+        return context
+    
+    def get_queryset(self):
+        # Get the category from the query parameter (if provided)
+        category_id = self.request.GET.get('category', None)
+        
+        # If a category is selected, filter the products by that category
+        if category_id:
+            return Product.objects.filter(category_id=category_id)
+        
+        # If no category is selected, return all products
+        return Product.objects.all()
+class AboutView(TemplateView):
+    template_name = 'about.html' 
 class ProductUploadView(CreateView):
     model = Product
     form_class = ProductUploadForm
@@ -91,4 +113,22 @@ class AddToCartView(LoginRequiredMixin, View):
         # Redirect to the home page or any other page (you can customize this)
         return redirect('home')
 # Create your views here.
+
+class CartView(TemplateView):
+    template_name = 'cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Retrieve the cart items for the current user
+        cart_items = Cart.objects.filter(user=self.request.user)
+        
+        # Calculate total price for all items in the cart
+        total_price = sum([item.product.price * item.quantity for item in cart_items])
+        
+        # Adding cart items and total price to context
+        context['cart_items'] = cart_items
+        context['total_price'] = total_price
+        
+        return context
 

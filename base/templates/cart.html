@@ -1,0 +1,55 @@
+{% extends 'main.html' %}
+{%load static%}
+{% block content %}
+
+<div class="products">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="filters">
+            <ul>
+              <li><a href="?category=">All</a></li>
+              {% for category in categories %}
+                  <li><a href="?category={{ category.id }}">{{ category.categoryName }}</a></li>
+              {% empty %}
+                  <li>No categories found</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="filters-content">
+              <div class="row grid">
+                {% for product in products %}
+                  <div class="col-lg-4 col-md-4 all des">
+                    <div class="product-item">
+                      <a href="#"><img src="{{ product.image.url }}" alt=""></a>
+                      <div class="down-content">
+                        <a href="#"><h4>{{ product.productName }}</h4></a>
+                        <h6>${{ product.price }} for {{product.quantity}}</h6>
+                        <p>{{ product.description }}</p>
+                        <ul class="stars">
+                          <li><i class="fa fa-star"></i></li>
+                          <li><i class="fa fa-star"></i></li>
+                          <li><i class="fa fa-star"></i></li>
+                          <li><i class="fa fa-star"></i></li>
+                          <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>Reviews (12)</span>
+                        <form method="post" action="{% url 'add_to_cart' product.id %}">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-primary">Add to Cart</button>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+
+              </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

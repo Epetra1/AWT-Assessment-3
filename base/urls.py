@@ -10,9 +10,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', CustomLoginView.as_view(), name = 'login'),
-    path('home/', HomeView.as_view(), name = 'home'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'), 
+    path('home/', HomeView.as_view(), name = 'home'),
+    path('products/', ProductsView.as_view(), name='products'),
+      path('cart/', CartView.as_view(), name='cart'),
+    path('about/', AboutView.as_view(), name='about'),
     path('home/upload/', ProductUploadView.as_view(), name='product_upload'),
     path('home/add-to-cart/<int:product_id>/', AddToCartView.as_view(), name='add_to_cart'),
     

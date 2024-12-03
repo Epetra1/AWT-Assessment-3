@@ -23,6 +23,8 @@ class User(AbstractUser):
 class Category(models.Model):
     categoryName = models.CharField(max_length = 50 , unique = True)
     image = models.ImageField(null = True, upload_to='catagory_img/')
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)  # e.g., $99999999.99
