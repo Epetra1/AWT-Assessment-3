@@ -1,3 +1,4 @@
+{%load static%}
 
     <!-- Header -->
     <header class="">
@@ -24,23 +25,25 @@
               <li class="nav-item">
                 <a class="nav-link" href="contact.html">Contact Us</a>
               </li>
-              <li>
+              <li class="nav-item">
               <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button class = 'logout-1' type="submit">Logout</button>
+                <button class = "customButtons" type="submit">Logout</button>
             </form> 
         </li>
-        <li>
+        <li class="nav-item">
             {% if request.user.role == 'supplier' %}
                 <form method="post" action="{% url 'product_upload' %}">
                     {% csrf_token %}
-                    <button type="submit">Upload</button>
+                    <button class="customButtons helloee" type="submit">Upload</button>
                 </form>
             {% endif %}
         </li>
-        <li>
-            <i class="fa-solid fa-cart-shopping" style = "font-size: 20px; color:white"></i>
-
+        <li class="nav-item">
+            <i class="fa-solid fa-cart-shopping" style="font-size: 20px; color:white"></i>
+            {% if cart_items_count > 0 %}
+                <span class="badge badge-danger">{{ cart_items_count }}</span>
+            {% endif %}
         </li>
             
             

@@ -1,33 +1,49 @@
 {% extends 'main.html' %}
 {%load static%}
 {% block content %}
+    <!-- Page Content -->
+    <div class="page-heading products-heading header-text">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-content">
+                <h4>new arrivals</h4>
+                <h2>sixteen products</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
 
 <div class="products">
     <div class="container">
+        {% if cart_items %}
+
       <div class="row">
-        <div class="col-md-12">
-          <div class="filters">
-            <ul>
-              <li><a href="?category=">All</a></li>
-              {% for category in categories %}
-                  <li><a href="?category={{ category.id }}">{{ category.categoryName }}</a></li>
-              {% empty %}
-                  <li>No categories found</li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
         <div class="col-md-12">
           <div class="filters-content">
               <div class="row grid">
-                {% for product in products %}
+                {% for item in cart_items %}
                   <div class="col-lg-4 col-md-4 all des">
                     <div class="product-item">
-                      <a href="#"><img src="{{ product.image.url }}" alt=""></a>
+                      <a href="#"><img src="{{ item.product.image.url }}" alt=""></a>
                       <div class="down-content">
-                        <a href="#"><h4>{{ product.productName }}</h4></a>
-                        <h6>${{ product.price }} for {{product.quantity}}</h6>
-                        <p>{{ product.description }}</p>
+                        <a href="#"><h4>{{ item.product.productName }}</h4></a>
+                        <h6>Quantity : {{ item.quantity }} </h6>
+                        <p>
+                            {{ item.product.price }} x {{ item.quantity }} = ${{ item.total_price|floatformat:2 }}
+                        </p>
+
+                    <form method="POST" action="{% url 'cart' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                        <button type="submit" class="btn btn-danger">Remove from Cart</button>
+                    </form>
+                    
+
+
+                        
                         <ul class="stars">
                           <li><i class="fa fa-star"></i></li>
                           <li><i class="fa fa-star"></i></li>
@@ -36,10 +52,7 @@
                           <li><i class="fa fa-star"></i></li>
                         </ul>
                         <span>Reviews (12)</span>
-                        <form method="post" action="{% url 'add_to_cart' product.id %}">
-                          {% csrf_token %}
-                          <button type="submit" class="btn btn-primary">Add to Cart</button>
-                      </form>
+
                       </div>
                     </div>
                   </div>
@@ -50,6 +63,9 @@
         </div>
 
       </div>
+      {% else %}
+      <p>Your cart is empty!</p>
+  {% endif %}
     </div>
   </div>
 {% endblock %}

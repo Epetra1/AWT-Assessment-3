@@ -119,16 +119,35 @@ class CartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # Retrieve the cart items for the current user
         cart_items = Cart.objects.filter(user=self.request.user)
-        
+
         # Calculate total price for all items in the cart
         total_price = sum([item.product.price * item.quantity for item in cart_items])
-        
+
+        # Attach total price for each item directly to the cart item
+        for item in cart_items:
+            item.total_price = item.product.price * item.quantity
+
         # Adding cart items and total price to context
         context['cart_items'] = cart_items
         context['total_price'] = total_price
         
         return context
 
+    def post(self, request, *args, **kwargs):
+        # Get the product ID from the request to remove from the cart
+        product_id = request.POST.get('product_id')
+        
+        if product_id:
+            # Remove the product from the user's cart
+            Cart.objects.filter(user=request.user, product_id=product_id).delete()
+        
+        return redirect('cart')  # Redirect back to the cart page
+    
+
+
+
+
+#IMP to check wheather cart has items
