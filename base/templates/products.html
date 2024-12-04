@@ -2,13 +2,13 @@
 {%load static%}
 {% block banner %}
     <!-- Page Content -->
-    <div class="page-heading products-heading header-text">
+    <div class="page-heading header-text" style = "background-image:url(cover.jpeg);">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
             <div class="text-content">
-              <h4>new arrivals</h4>
-              <h2>sixteen products</h2>
+              <h4>All Products</h4>
+
             </div>
           </div>
         </div>
@@ -38,19 +38,12 @@
                   {% for product in products %}
                     <div class="col-lg-4 col-md-4 all des">
                       <div class="product-item">
-                        <a href="#"><img src="{{ product.image.url }}" alt=""></a>
+                        <a href="#"><img src="{{ product.image.url }}" alt=""  style="width: 300px; height: 200px; object-fit: cover;"></a>
                         <div class="down-content">
                           <a href="#"><h4>{{ product.productName }}</h4></a>
                           <h6>${{ product.price }} for {{product.quantity}}</h6>
                           <p>{{ product.description }}</p>
-                          <ul class="stars">
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                          </ul>
-                          <span>Reviews (12)</span>
+                          <span>Supplier : {{product.supplier.fullname}}</span>
                           <form method="post" action="{% url 'add_to_cart' product.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary">Add to Cart</button>

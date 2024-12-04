@@ -22,14 +22,14 @@ class User(AbstractUser):
     
 class Category(models.Model):
     categoryName = models.CharField(max_length = 50 , unique = True)
-    image = models.ImageField(null = True, upload_to='catagory_img/')
+   
     def __str__(self):
-        return self.name
+        return self.categoryName
 
 class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)  # e.g., $99999999.99
     quantity = models.CharField(max_length = 10, null= False , blank = False)  # Track available stock
-    category = models.ForeignKey(Category, on_delete  = models.SET_NULL, null = True)
+    category = models.ForeignKey(Category, on_delete  = models.CASCADE, null = True)
     productName = models.CharField(max_length = 100, null = False)
     image = models.ImageField(null = True, upload_to='products_img/')
     description = models.CharField(max_length = 500, null = True )

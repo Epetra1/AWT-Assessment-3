@@ -36,6 +36,7 @@ class HomeView(ListView):
     model = Product
     template_name = 'home.html'
     context_object_name = 'products'
+    paginate_by = 6  # Automatically limits the number of products to 6 per page
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,10 +47,12 @@ class HomeView(ListView):
     def get_queryset(self):
         category_id = self.request.GET.get('category', None)
         if category_id:
-            # If a category is selected, filter products by that category
-            return Product.objects.filter(category_id=category_id)
-        # If no category is selected, return all products
-        return Product.objects.all()
+            # If a category is selected, filter products by that category and limit to 6
+            return Product.objects.filter(category_id=category_id)[:6]
+        # If no category is selected, return all products but limit to 6
+        return Product.objects.all()[:6]
+    
+
 class ProductsView(ListView):
     model = Product
     template_name = 'products.html'  # Your template for the products page

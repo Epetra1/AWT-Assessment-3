@@ -2,13 +2,13 @@
 {%load static%}
 {% block content %}
     <!-- Page Content -->
-    <div class="page-heading products-heading header-text">
+    <div class="page-heading header-text">
         <div class="container">
           <div class="row">
             <div class="col-md-12">
               <div class="text-content">
-                <h4>new arrivals</h4>
-                <h2>sixteen products</h2>
+                <h4>Checkout Page</h4>
+                
               </div>
             </div>
           </div>
@@ -27,7 +27,7 @@
                 {% for item in cart_items %}
                   <div class="col-lg-4 col-md-4 all des">
                     <div class="product-item">
-                      <a href="#"><img src="{{ item.product.image.url }}" alt=""></a>
+                      <a href="#"><img src="{{ item.product.image.url }}" alt=""  style="width: 300px; height: 200px; object-fit: cover;"></a>
                       <div class="down-content">
                         <a href="#"><h4>{{ item.product.productName }}</h4></a>
                         <h6>Quantity : {{ item.quantity }} </h6>
@@ -35,25 +35,22 @@
                             {{ item.product.price }} x {{ item.quantity }} = ${{ item.total_price|floatformat:2 }}
                         </p>
 
+
                     <form method="POST" action="{% url 'cart' %}">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ item.product.id }}">
                         <button type="submit" class="btn btn-danger">Remove from Cart</button>
                     </form>
+                    <br>
+                    <span>Supplier : {{item.product.supplier.fullname}}</span>
+
                     
 
 
-                        
-                        <ul class="stars">
-                          <li><i class="fa fa-star"></i></li>
-                          <li><i class="fa fa-star"></i></li>
-                          <li><i class="fa fa-star"></i></li>
-                          <li><i class="fa fa-star"></i></li>
-                          <li><i class="fa fa-star"></i></li>
-                        </ul>
-                        <span>Reviews (12)</span>
 
-                      </div>
+                    
+                </div>
+                
                     </div>
                   </div>
                   {% endfor %}
@@ -68,4 +65,7 @@
   {% endif %}
     </div>
   </div>
+  <div class="checkout-button" style="text-align: center; margin-top: 20px;">
+    <a href="#" class="btn" style="background-color: #f33f3f; color: white; padding: 10px 20px; font-size: 16px; text-decoration: none; border-radius: 5px;">Proceed to Checkout</a>
+</div>
 {% endblock %}
